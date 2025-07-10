@@ -17,15 +17,18 @@
   body, html {
     margin: 0; padding: 0;
     font-family: 'Times New Roman', serif;
-    transition: background-color 0.3s, color 0.3s;
     height: 100%;
-    overflow: hidden;
-    background-color: var(--color-bg-dark);
+    background: linear-gradient(-45deg, #5b3aff, #1a1a40, #4c00ff, #2a2a72);
+    background-size: 400% 400%;
+    animation: gradientBG 20s ease infinite;
     color: var(--color-text-dark);
+    overflow-x: hidden;
   }
-  body.light {
-    background-color: var(--color-bg-light);
-    color: var(--color-text-light);
+
+  @keyframes gradientBG {
+    0%{background-position:0% 50%;}
+    50%{background-position:100% 50%;}
+    100%{background-position:0% 50%;}
   }
 
   /* Latin tagline fixed at top */
@@ -35,14 +38,15 @@
     left: 50%;
     transform: translateX(-50%);
     text-align: center;
-    z-index: 3;
+    z-index: 10;
     user-select: none;
+    color: var(--color-text-dark);
+    text-shadow: 0 0 8px #a085ff;
   }
   .top-tagline .latin-tagline {
     font-size: 1.4rem;
     font-weight: 700;
     margin: 0;
-    text-shadow: 0 0 6px #a1a1ff;
   }
   .top-tagline .translation {
     font-size: 1rem;
@@ -51,7 +55,7 @@
     font-family: Georgia, serif;
   }
 
-  /* Container for brand name and motto, centered vertically */
+  /* Container for center content */
   .main-content {
     height: 100vh;
     display: flex;
@@ -60,23 +64,7 @@
     align-items: center;
     text-align: center;
     padding: 20px;
-    position: relative;
-    z-index: 2;
-  }
-
-  /* Background gradient */
-  #background-canvas {
-    position: fixed;
-    inset: 0;
-    z-index: 1;
-    background: linear-gradient(-45deg, #5b3aff, #1a1a40, #4c00ff, #2a2a72);
-    background-size: 400% 400%;
-    animation: gradientBG 20s ease infinite;
-  }
-  @keyframes gradientBG {
-    0%{background-position:0% 50%;}
-    50%{background-position:100% 50%;}
-    100%{background-position:0% 50%;}
+    user-select: none;
   }
 
   .brand-name {
@@ -85,18 +73,46 @@
     letter-spacing: 0.15em;
     margin: 0 0 0.3rem 0;
     text-shadow: 0 0 16px var(--color-primary);
-    user-select: none;
     text-transform: uppercase;
-    position: relative;
-    top: -20px; /* Slight upward nudge */
+    color: var(--color-text-dark);
   }
 
   .motto {
     font-size: 1.4rem;
     font-weight: 600;
     margin: 0;
+    color: var(--color-text-dark);
   }
 
+  /* Pulsing Coming Soon */
+  @keyframes pulse {
+    0%, 100% {
+      text-shadow:
+        0 0 10px #9147ff,
+        0 0 20px #9147ff,
+        0 0 30px #9147ff,
+        0 0 40px #a87fff;
+      color: #b99aff;
+    }
+    50% {
+      text-shadow:
+        0 0 20px #9147ff,
+        0 0 30px #9147ff,
+        0 0 40px #a87fff,
+        0 0 60px #c2aaff;
+      color: #d0bfff;
+    }
+  }
+
+  .coming-soon {
+    font-size: 2.2rem;
+    font-weight: 800;
+    margin-top: 1rem;
+    animation: pulse 2.5s infinite ease-in-out;
+    text-transform: uppercase;
+  }
+
+  /* Donate Button */
   .donate-btn {
     background: var(--color-primary);
     border: none;
@@ -114,15 +130,6 @@
     box-shadow: 0 8px 25px var(--color-primary-hover);
   }
 
-  /* Fade animation (unused now, but kept) */
-  #content {
-    opacity: 1;
-    transition: opacity 0.3s ease-in-out;
-  }
-  #content.fade-out {
-    opacity: 0;
-  }
-
   /* Modal styles */
   #donate-modal {
     display: none;
@@ -131,7 +138,7 @@
     background: rgba(0,0,0,0.7);
     justify-content: center;
     align-items: center;
-    z-index: 10;
+    z-index: 20;
   }
   #donate-modal.active {
     display: flex;
@@ -168,10 +175,10 @@
     font-size: 0.85rem;
     color: #888;
     font-family: Georgia, serif;
-    z-index: 2;
+    user-select: none;
   }
 
-  /* Responsive for phones */
+  /* Responsive */
   @media (max-width: 480px) {
     .top-tagline .latin-tagline {
       font-size: 1.1rem;
@@ -181,11 +188,13 @@
     }
     .brand-name {
       font-size: 3.8rem;
-      top: -10px;
-      margin-bottom: 0.2rem;
     }
     .motto {
       font-size: 1rem;
+    }
+    .coming-soon {
+      font-size: 1.5rem;
+      margin-top: 0.6rem;
     }
     .donate-btn {
       padding: 0.6rem 1.5rem;
@@ -198,8 +207,7 @@
   }
 </style>
 </head>
-<body class="dark">
-  <canvas id="background-canvas"></canvas>
+<body>
 
   <!-- Latin tagline fixed on top -->
   <div class="top-tagline" aria-label="Latin tagline">
@@ -207,13 +215,11 @@
     <p class="translation">Truth through Disputation</p>
   </div>
 
-  <!-- Main brand name and motto centered -->
-  <main id="content" tabindex="0" aria-live="polite" aria-label="Coming soon page">
-    <div class="main-content">
-      <h1 class="brand-name">Disputa</h1>
-      <p class="motto">Debate: The Oldest Art, Reimagined.</p>
-      <button class="donate-btn" id="donate-btn" aria-haspopup="dialog" aria-controls="donate-modal">Donate</button>
-    </div>
+  <main class="main-content" aria-label="Coming soon page" tabindex="0">
+    <h1 class="brand-name">Disputa</h1>
+    <p class="motto">Debate: The Oldest Art, Reimagined.</p>
+    <p class="coming-soon">Coming Soon</p>
+    <button class="donate-btn" id="donate-btn" aria-haspopup="dialog" aria-controls="donate-modal">Donate</button>
   </main>
 
   <div id="donate-modal" role="dialog" aria-modal="true" aria-labelledby="donate-title" tabindex="-1">
@@ -241,11 +247,11 @@
   </footer>
 
 <script>
-  // Donate modal logic (flicker fixed by removing fade-out)
+  // Donate modal logic
   const donateBtn = document.getElementById('donate-btn');
   const donateModal = document.getElementById('donate-modal');
   const closeDonateBtn = document.getElementById('close-donate');
-  const content = document.getElementById('content');
+  const mainContent = document.querySelector('.main-content');
 
   donateBtn.addEventListener('click', () => {
     donateModal.classList.add('active');
@@ -254,104 +260,23 @@
 
   closeDonateBtn.addEventListener('click', () => {
     donateModal.classList.remove('active');
-    content.focus();
+    mainContent.focus();
   });
 
   donateModal.addEventListener('click', (e) => {
     if(e.target === donateModal) {
       donateModal.classList.remove('active');
-      content.focus();
+      mainContent.focus();
     }
   });
 
   window.addEventListener('keydown', (e) => {
     if(e.key === 'Escape' && donateModal.classList.contains('active')) {
       donateModal.classList.remove('active');
-      content.focus();
+      mainContent.focus();
     }
   });
-
-  // Animated background particles on canvas with connection lines
-  const canvas = document.getElementById('background-canvas');
-  const ctx = canvas.getContext('2d');
-
-  let particlesArray;
-
-  function resizeCanvas() {
-    canvas.width = window.innerWidth;
-    canvas.height = window.innerHeight;
-  }
-
-  class Particle {
-    constructor() {
-      this.x = Math.random() * canvas.width;
-      this.y = Math.random() * canvas.height;
-      this.size = Math.random() * 2 + 1;
-      this.speedX = (Math.random() - 0.5) * 0.5;
-      this.speedY = (Math.random() - 0.5) * 0.5;
-      this.color = 'rgba(145, 71, 255, 0.3)';
-    }
-    update() {
-      this.x += this.speedX;
-      this.y += this.speedY;
-      if(this.x < 0 || this.x > canvas.width) this.speedX = -this.speedX;
-      if(this.y < 0 || this.y > canvas.height) this.speedY = -this.speedY;
-    }
-    draw() {
-      ctx.beginPath();
-      ctx.fillStyle = this.color;
-      ctx.shadowColor = 'rgba(145, 71, 255, 0.7)';
-      ctx.shadowBlur = 8;
-      ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
-      ctx.fill();
-    }
-  }
-
-  function initParticles() {
-    particlesArray = [];
-    for(let i = 0; i < 100; i++) {
-      particlesArray.push(new Particle());
-    }
-  }
-
-  function connectParticles() {
-    let maxDistance = 130;
-    for(let a = 0; a < particlesArray.length; a++) {
-      for(let b = a + 1; b < particlesArray.length; b++) {
-        let dx = particlesArray[a].x - particlesArray[b].x;
-        let dy = particlesArray[a].y - particlesArray[b].y;
-        let distance = Math.sqrt(dx * dx + dy * dy);
-        if(distance < maxDistance) {
-          ctx.strokeStyle = `rgba(145, 71, 255, ${1 - distance / maxDistance})`;
-          ctx.lineWidth = 1;
-          ctx.beginPath();
-          ctx.moveTo(particlesArray[a].x, particlesArray[a].y);
-          ctx.lineTo(particlesArray[b].x, particlesArray[b].y);
-          ctx.stroke();
-        }
-      }
-    }
-  }
-
-  function animateParticles() {
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-    particlesArray.forEach(particle => {
-      particle.update();
-      particle.draw();
-    });
-    connectParticles();
-    requestAnimationFrame(animateParticles);
-  }
-
-  window.addEventListener('resize', () => {
-    resizeCanvas();
-    initParticles();
-  });
-
-  // Initialize on load
-  resizeCanvas();
-  initParticles();
-  animateParticles();
 </script>
+
 </body>
 </html>
